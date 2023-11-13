@@ -1,12 +1,9 @@
 package com.intuit.player.loader;
 
-import com.intuit.player.constant.ResourcesConstants;
 import com.intuit.player.constant.RuntimeConstants;
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvException;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
@@ -41,9 +38,11 @@ public class CsvDataLoaderService {
             List<String[]> rows = csvReader.readAll();
             ExecutorService exec = Executors.newFixedThreadPool(RuntimeConstants.CSV_LOADER_MAX_DEGREE_OF_PARALLELISM);
             List<Callable<Boolean>> tasks = new ArrayList<>();
-            for (final String[] row : rows) {
+            for (int i = loader.getCSVContentRowStartIndex(); i < rows.size(); i++) {
+                var row = rows.get(i);
                 tasks.add(() -> loader.load(row));
             }
+
             long startTime = System.currentTimeMillis();
             List<Future<Boolean>> loadResults = exec.invokeAll(tasks);
             long endTime = System.currentTimeMillis();

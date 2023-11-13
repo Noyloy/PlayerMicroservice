@@ -1,8 +1,8 @@
 package com.intuit.player.loader;
 
 public interface ICsvDBLoader {
-    public String getCSVPath();
-    public int getCSVContentRowStartIndex();
-    public String getCSVDBName();
-    public boolean load(String[] csvRow);
+    String getCSVPath();
+    int getCSVContentRowStartIndex();
+    String getCSVDBName();
+    boolean load(String[] csvRow);
 }
